@@ -1,5 +1,6 @@
 package com.wjs.study.memSize;
 
+import java.io.Serializable;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -10,13 +11,15 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.wjs.study.memSize.usapCacheSize.JvmCacheService;
+
 
 /**
  * 获取对象占用内存的大小
  * 
  * 使用方法：
  * 1. 将工程导出为jar包，
- * 2. 修改jar包中的MANIFEST.MF 文件，增加：
+ * 2. 修改jar包中的MANIFEST.MF 文件，增加： 【根据 MANIFEST.MF 规范，在这个文件的最后必须有两个空行，且每个 key 的冒号后面必须有一个空格，否则均认为是无效的 MANIFEST.MF 文件。】
  * 		Can-Redefine-Classes: true
 		Can-Retransform-Classes: true
 		Premain-Class: com.wjs.study.memSize.ObjectSize
@@ -31,7 +34,14 @@ import java.util.concurrent.ConcurrentHashMap;
 		http://www.csdn.net/article/2013-05-22/2815377-developing-a-jvm-agent
 		http://www.tuicool.com/articles/vYrARj
 		http://www.cnblogs.com/adolfmc/archive/2012/10/07/2713562.html
+		http://bbs.csdn.net/topics/390654373
  * 
+ * 
+ * 命令运行发现错误
+ * 		size.jar中没有主清单属性
+ * 
+ * MANIFEST.MF 写错
+ * 			根据 MANIFEST.MF 规范，在这个文件的最后必须有两个空行，且每个 key 的冒号后面必须有一个空格，否则均认为是无效的 MANIFEST.MF 文件。
  * @author 王金绍
  * 2015年5月8日 下午12:16:03
  */
@@ -113,6 +123,19 @@ public class JavaSizeOf {
         for(int i=0 ;i < 100000; i++){
         	map.put(UUID.randomUUID().toString(), "0.25"+String.valueOf(i));
         }
-        System.out.println(JavaSizeOf.sizeof(map));
+        System.out.println(JavaSizeOf.sizeof(map)/1024);
+        
+        JvmCacheService jvmCacheService  = new JvmCacheService<Serializable>();
+		
+        
+		for(int i=0 ;i < 100000; i++){
+			jvmCacheService.put("2", UUID.randomUUID().toString(), "0.25"+String.valueOf(i), 1000);
+        }
+        System.out.println(JavaSizeOf.sizeof(jvmCacheService)/1024);  //11M
+        
+        ConcurrentHashMap<String, String> map2 = new ConcurrentHashMap<String, String>(1024);
+        
+        System.out.println(JavaSizeOf.sizeof(map2)/1024);  //11M
+        
 	}
 }
