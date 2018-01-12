@@ -9,6 +9,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.wjs.study.memSize.usapCacheSize.JvmCacheService;
@@ -26,7 +27,7 @@ import com.wjs.study.memSize.usapCacheSize.JvmCacheService;
 		Main-Class: com.wjs.study.memSize.ObjectSize
 		
  * 3. 进入jar文件目录，执行jar命令
- * 	    java -javaagent:size.jar -jar size.jar
+ * 	    java -javaagent:study.jar -jar study.jar
  * 
  * 4. 参考网址
 		http://ju.outofmemory.cn/entry/29680
@@ -119,6 +120,30 @@ public class JavaSizeOf {
 		System.out.println(JavaSizeOf.sizeof(new Long(1L)));
         System.out.println(JavaSizeOf.sizeof(new String("232323")));
         System.out.println(JavaSizeOf.sizeof(new Object()));
+		ArrayBlockingQueue queue = new ArrayBlockingQueue(1024);
+
+		for (int i=0; i<1024; i++){
+			RpcLog rpcLog = new RpcLog();
+			rpcLog.setTraceId(UUID.randomUUID().toString()+"@192.168.15.58@"+System.currentTimeMillis()+"@10000");
+			rpcLog.setSpanId("0.02");
+			rpcLog.setSrcAppId("dsfasdfadsfdssfa");
+			rpcLog.setAimAppId("dsfasdfadsfdssfa");
+			rpcLog.setAimService("com.onemt.cyous.sgfasd.sfgsd.dgersdfa");
+			rpcLog.setAimMethod("sdfgasfgas");
+			rpcLog.setAimVersion("0.0.0");
+			rpcLog.setSrcAddress("128.159.348.45");
+			rpcLog.setAimAddress("128.159.348.45");
+			rpcLog.setReqLength(1552);
+			rpcLog.setRespLength(155);
+			rpcLog.setClientSide(false);
+			rpcLog.setStartTime(System.currentTimeMillis());
+			rpcLog.setEndTime(System.currentTimeMillis());
+			rpcLog.setRs(1);
+			queue.add(rpcLog);
+		}
+		System.out.println(JavaSizeOf.sizeof(queue)/1024);  //11M
+
+
         ConcurrentHashMap<String, String> map = new ConcurrentHashMap<String, String>();
         for(int i=0 ;i < 100000; i++){
         	map.put(UUID.randomUUID().toString(), "0.25"+String.valueOf(i));

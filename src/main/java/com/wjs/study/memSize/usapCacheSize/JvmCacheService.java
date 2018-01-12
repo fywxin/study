@@ -64,8 +64,7 @@ public class JvmCacheService<M extends Serializable> extends AbstractCacheServic
 			this.doDel(cacheName, key);
 		}
 	}
-	
-	@Override
+
 	public Set<String> getKeys(String cacheName) {
 		Set<String> ks = this.cache.keySet();
 		Set<String> keys = this.cache.keySet();
@@ -76,8 +75,7 @@ public class JvmCacheService<M extends Serializable> extends AbstractCacheServic
 		}
 		return ks;
 	}
-	
-	@Override
+
 	public void clear(String cacheName) {
 		Set<String> keys = this.cache.keySet();
 		for(String key : keys){
@@ -87,7 +85,6 @@ public class JvmCacheService<M extends Serializable> extends AbstractCacheServic
 		}
 	}
 
-	@Override
 	public Object getNativeCache() {
 		return cache;
 	}
