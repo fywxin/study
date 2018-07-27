@@ -1,0 +1,161 @@
+package com.onemt.abtest.domain.model;
+
+import com.onemt.abtest.domain.constant.GroupStatusEnum;
+import com.onemt.abtest.domain.constant.GroupTypeEnum;
+import com.onemt.abtest.domain.infrastructure.adapter.AdapterHolder;
+
+import java.util.List;
+
+/**
+ * 实验分组
+ *  无需支持一个试验多个变量情况，目前不存在
+ * Created by 王金绍 on 2018/7/16 15:28.
+ */
+public class ExptGroup {
+
+    private Integer id;
+    //所属实验
+    private Integer exptId;
+    //分组名称
+    private String groupName;
+    //分组类型
+    private GroupTypeEnum type;
+    //分组状态
+    private GroupStatusEnum status;
+    //分组变量
+    private String flagVal;
+    //分组对象
+    private ExptGroupTarget target;
+
+    public ExptGroup() {
+    }
+
+    public ExptGroup(Integer id, Integer exptId) {
+        this.id = id;
+        this.exptId = exptId;
+    }
+
+    /**
+     * 将设备放入本组中
+     * @param deviceId
+     */
+    public void join(String deviceId) {
+        AdapterHolder.exptGroupAdapter.joinGroup(this, deviceId);
+    }
+
+    /**
+     * 将设备放入试验组，检查该场景下其他实验是否已经包含此设备
+     * @param deviceId
+     * @return
+     */
+    public boolean joinChk(String deviceId){
+        return AdapterHolder.exptGroupAdapter.joinGroupChk(this, deviceId);
+    }
+
+    public List<String> joinChkBatch(List<String> deviceIds) {
+        return AdapterHolder.exptGroupAdapter.joinGroupChkBatch(this, deviceIds);
+    }
+
+    /**
+     * 设备是否在本组中
+     * @param deviceId
+     * @return
+     */
+    public boolean isJoin(String deviceId){
+        return AdapterHolder.exptGroupAdapter.isJoinGroup(this, deviceId);
+    }
+
+    /**
+     * 是否在本分组内
+     * @param flowSeg
+     * @return
+     */
+    public boolean isMatchSeg(short flowSeg){
+        return target.getFlowSegment().isInFlowSeg(flowSeg);
+    }
+
+    /**
+     * 本组是否发布
+     * @return
+     */
+    public boolean isRelease(){
+        return status == GroupStatusEnum.RELEASE;
+    }
+
+    /**
+     * 设备是否在本组白名单
+     * @param deviceId
+     * @return
+     */
+    public boolean isInWhiteList(String deviceId){
+        if (target.getWhiteLists() == null || target.getWhiteLists().isEmpty()){
+            return false;
+        }
+        return target.getWhiteLists().contains(deviceId);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getExptId() {
+        return exptId;
+    }
+
+    public void setExptId(Integer exptId) {
+        this.exptId = exptId;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public GroupTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(GroupTypeEnum type) {
+        this.type = type;
+    }
+
+    public String getFlagVal() {
+        return flagVal;
+    }
+
+    public void setFlagVal(String flagVal) {
+        this.flagVal = flagVal;
+    }
+
+    public GroupStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(GroupStatusEnum status) {
+        this.status = status;
+    }
+
+    public ExptGroupTarget getTarget() {
+        return target;
+    }
+
+    public void setTarget(ExptGroupTarget target) {
+        this.target = target;
+    }
+
+    @Override
+    public String toString() {
+        return "ExptGroup{" +
+                "exptId=" + exptId +
+                ", groupName='" + groupName + '\'' +
+                ", flagVal='" + flagVal + '\'' +
+                '}';
+    }
+}

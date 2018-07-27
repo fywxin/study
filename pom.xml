@@ -5,7 +5,7 @@
 	<groupId>com.wjs</groupId>
 	<artifactId>study</artifactId>
 	<version>1.0.0</version>
-	<packaging>jar</packaging>
+	<packaging>jar </packaging>
 
 	<name>study</name>
 	<url>http://maven.apache.org</url>
