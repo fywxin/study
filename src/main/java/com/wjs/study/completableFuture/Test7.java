@@ -18,6 +18,7 @@ public class Test7 {
             }
             int j = 1/i;
 
+            
             return "2";
         });
         try {
